@@ -1,0 +1,53 @@
+<section class="chapter" id="ch2">
+  <div class="ch-head">
+    <div class="ch-num"><b>02</b>CHAPTER<br/>00:01</div>
+    <div class="ch-title">
+      <h2>九个概念与一张拒绝表</h2>
+      <p>领域模型是调度规程的骨架：Source 到 Ticket 的一次流转，以及十二个「想清楚了但决定不要」的概念</p>
+    </div>
+  </div>
+  <div class="ch-body">
+    <p class="lede">001 号文档用一句话讲完业务主流程：「工作从 Trigger 流向 Eval 再进入执行。Source 产出 Trigger，Trigger 以订阅关系扇出为 Ticket 的上下文，Eval 决定是否开工，接受则带着 Mandate 创建 Ticket，Assignment 把工单交给 Executor，结果经 Channel 流回 Source。」画成一张图：</p>
+    <div class="fig"><div class="frame">
+      <p class="layers-cap">FIG. 01 · 领域模型九件套——从一次事件进站到一笔结果回写（依 docs/001 的 mermaid 图重绘）</p>
+      <div class="layers">
+        <div class="layer"><span class="layer-mark lm-1"></span><i>C1</i><b>Source<small>来源</small></b><p>事件流。持有读位置与自己的 bot 身份；重启不得重放事件——进站即记账。</p></div>
+        <div class="layer"><span class="layer-mark lm-2"></span><i>C2</i><b>Trigger<small>触发</small></b><p>不可变事件。重复接受同一个 Trigger 只会创建一张工单——幂等的单位。</p></div>
+        <div class="layer"><span class="layer-mark lm-3"></span><i>C3</i><b>Thread<small>线程</small></b><p>时序上的 Trigger 串。同一时刻至多一个 Eval 在跑，后来的合并进下一批。</p></div>
+        <div class="layer"><span class="layer-mark lm-4"></span><i>C4</i><b>Eval<small>评估</small></b><p>两层判断：确定性的 gate（准入）+ 模型的 assessment（研判）。输出 Decision。无状态。</p></div>
+        <div class="layer"><span class="layer-mark lm-5"></span><i>C5</i><b>Mandate<small>授权</small></b><p>接受所授予的东西：Policy 版本、范围、强度、命中的规则。<b>不可变</b>；只有人的 stop 能撤回。</p></div>
+        <div class="layer"><span class="layer-mark lm-6"></span><i>C6</i><b>Ticket<small>工单</small></b><p>被授权的工作单位。只有 Eval 能创建；自己定义状态，<b>不跟随执行者</b>。</p></div>
+      </div>
+    </div><figcaption><span><b>FIG. 01</b> 概念装配图（Assignment / Subscription / Channel 略）</span><span>依 docs/001-domain.md</span></figcaption></div>
+
+    
+    <div class="fig"><div class="frame">
+      <img src="assets/art/ch2.webp" alt="单眼折纸鸟在分拣台前，把几个贴着问号的包裹放进标着叉的拒收筐" width="1152" height="832" loading="lazy" style="width:100%;border:1px solid var(--line)"/>
+    </div><figcaption><span><b>FIG. 02</b> 分拣台：想清楚了但决定不要的概念，进拒收筐</span><span>INK &amp; GOUACHE / 2026</span></figcaption></div>
+
+<h3>「人」不是领域概念</h3>
+    <p>整张概念表里最锋利的一刀，藏在一句话里（001 原文）：</p>
+    <div class="pull"><b>A person is not a domain concept.</b><br/>人不是领域概念。Trigger 只携带其行为者在各自 Source 里的标识；白名单是 Policy 中该 Source 的部分；一个人在多个平台有账号这件事，是提示词文本，Agent 需要时才去读。</div>
+    <p>为什么值得单独裱起来？因为绝大多数多 Agent 系统的第一反应是建一个「用户/成员/身份」实体，然后把跨平台账号映射、组织架构、权限继承一层层长上去。标本把这三件事分别钉死在三个更便宜的容器里：<em>标识</em>随 Trigger 走（元数据）、<em>权限</em>归 Policy 的 Source 分部（配置）、<em>跨平台对应</em>交给一段叫 identities 的团队技能文本（000 文档里说的「业务需求变成属性或提示词，不加概念」）。概念表短一个词，长出来的分支就少一片森林。</p>
+
+    <h3>十二个「想清楚了但决定不要」</h3>
+    <p>001 号文档末尾有一张 Rejected concepts 表——十二行，每行一个被否决的设计加上否决理由。这种表在任何设计文档里都罕见，因为它是<em>用未来的自己为读者省的坑</em>。摘六条最见功力的：</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>被拒绝的设计</th><th>拒绝理由（原文意译）</th></tr></thead>
+      <tbody>
+        <tr><td>把「用户/成员」建为实体，或跨 Source 映射身份</td><td>人是 Trigger 元数据；白名单属于 Policy；跨平台映射是提示词文本</td></tr>
+        <tr><td>Eval 自己调度延迟触发</td><td>需要等待的条件就是一个普通的 Source——<b>Eval 永不回头依赖 Source</b></td></tr>
+        <tr><td>「等待中/已撤销」的 Eval 状态</td><td>等待属于 Source；超时的 Eval 重新入队，或记 unavailable 收场</td></tr>
+        <tr><td>执行器声称「人叫它停了」</td><td><b>只有 Eval 决定结束的强度</b>——stop 的解释权不在干活的人手里</td></tr>
+        <tr><td>Policy 变更时取消运行中的工单</td><td>取消会留下半成品；变更被记录并投递，而不是撤销授权</td></tr>
+        <tr><td>从报告的自由文本里推断「在等人」</td><td>分类需要结构化事实；执行器通过结构化字段提问</td></tr>
+      </tbody>
+    </table></div>
+    <p>第六条值得多看一眼：「从自由文本推断状态」是几乎所有 Agent 系统的真实做法——模型说一句「等待用户反馈」，系统就信了。标本拒绝它，理由是<em>分类需要结构化事实</em>：Executor 报告里有一个专门的字段提问（Attention），面板和阶段机都只认这个字段。这与 VOL.05 的「证据先于结论」、VOL.06 的「判分器也要被评测」是同一条原则的又一次落地：<strong>别让最会说话的组件兼职当状态机</strong>。</p>
+
+    <h3>双语术语表：给概念上户口</h3>
+    <p>001 文档最后附了一张 Glossary，每个术语配中文名：Source 来源、Trigger 触发、Thread 线程、Eval 评估、Mandate 授权、Ticket 工单、Assignment 派工、Attention 待人工决定……并注明面板一次只显示一种语言，「发给人的消息用平实语言，不用这些术语」。一个工程系统给领域概念上双语户口，还规定<em>术语不许出现在对人说的话里</em>——这是把 000 的注意力原则用到了词汇层面。</p>
+    <div class="note"><b>系列对照：</b>VOL.04《Agent 内核》写过拓扑与类型化委托；那一篇讲的是「调用关系怎么画」，这一篇讲的是「授权关系怎么立」——Ticket 背后永远跟着一条 Mandate，干活的是谁不重要，<em>为什么可以干、能干到哪</em>才是头等公民。</div>
+    <p>骨架立住了。下一章把最重要的一段流程单独放大：一个 Trigger 怎么通过门禁，谁有资格按下发车铃。</p>
+  </div>
+</section>

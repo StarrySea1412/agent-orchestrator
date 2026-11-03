@@ -1,0 +1,65 @@
+<section class="chapter" id="ch3">
+  <div class="ch-head">
+    <div class="ch-num"><b>03</b>CHAPTER<br/>00:02</div>
+    <div class="ch-title">
+      <h2>授权：谁能让它干活</h2>
+      <p>调度规程里最硬的一段：门禁先行、三格准入表、强度三档，以及「执行器无权宣称人叫它停」</p>
+    </div>
+  </div>
+  <div class="ch-body">
+    <p class="lede">一个常驻系统监听着整个仓库和一群聊天群，第一道要回答的问题不是「能不能干好」，而是「<em>谁说才算数</em>」。002 号文档开篇把立场钉死：</p>
+    <div class="pull">宿主执行白名单、规则与授权（Mandate）。<b>消息、评论和引用的文档只是判断的输入，它们无法更改这些权限。</b></div>
+    <p>这句宣言是整章的钥匙：<em>授权是宿主的职责，不是模型的读心术</em>。后面所有机制——门禁、准入表、强度、模式——都是这句宣言的展开。</p>
+
+    <h3>门禁：两条路径，先分家</h3>
+    <p>一个 Trigger 进站，先分两条路。<strong>Eval 路径</strong>决定是否开工：Source 先记录消息是否呼叫了 Agent（mention @提及 / direct 私信），gate 检查发送者与该 Source 的 Policy——「白名单上的人呼叫 Agent 构成明确请求」。另一条是<strong>订阅路径</strong>：已订阅 Thread 上的每条消息（包括 bot 和 CI 的）都作为上下文送达工单，「这条通道绕过门禁、不授予新权力」——工单依然被自己的 Mandate 限制着。<em>上下文归上下文，权力归权力</em>，两者在概念层面就分了家。</p>
+    <p>没被任何工单接住的消息呢？落到一张三行准入表上。每个 Source 的 Policy 都有一张 admission table，行是「接收范围」（某个群、某个仓库范围），每行最多三个格子，每格决定一类消息的去向——格子里的选项和默认值直接核对自 <code>src/admission.ts</code> 与 002 文档：</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>格子（哪类消息）</th><th>可选值</th><th>默认</th></tr></thead>
+      <tbody>
+        <tr><td>在名单上的人，没有呼叫 Agent</td><td>inferred / ignore</td><td class="warn">inferred（推断候选）</td></tr>
+        <tr><td>不在名单上的人，呼叫了 Agent</td><td>explicit / inferred / ignore</td><td class="warn">ignore</td></tr>
+        <tr><td>不在名单上的人，没呼叫 Agent</td><td>inferred / ignore</td><td class="warn">ignore</td></tr>
+      </tbody>
+    </table></div>
+    <p>把第二格改成 explicit，就等于宣布「这个支持群里任何人 @ 它都算正式派单」。三格 × 三档 accept mode（off / observe / auto）组合出全部放权策略——而 explicit 请求在<em>任何</em>模式下都有效。建议动手玩玩下面的准入法庭，把每条消息按进格子里看看判决：</p>
+
+    <div class="demo" id="d1">
+      <div class="demo-head"><span class="demo-tag">DEMO 01 · 准入法庭</span><span class="demo-title">一条消息的判决书<span class="hint">点格子、切模式、选消息</span></span></div>
+      <div class="demo-body">
+        <div class="ad-wrap">
+          <div class="ad-board" id="d1-board"></div>
+          <div class="ad-side">
+            <div class="ad-case" id="d1-case"></div>
+            <div class="ad-verdict" id="d1-verdict"></div>
+            <div class="ad-flow" id="d1-flow"></div>
+          </div>
+        </div>
+      </div>
+      <div class="demo-foot">表格、默认值与强度判定核对自 <b>docs/002</b> 的 admission 表与 Strength 表；explicit 在任何 accept mode 下都有效；observe 对推断型只记「would accept」不创建工单。Bot 永远只能是 inferred 候选。</div>
+    </div>
+
+    
+    <div class="fig"><div class="frame">
+      <img src="assets/art/ch3.webp" alt="单眼折纸鸟检票员站在检票口，手持车票对着红绿黄三色信号灯核对" width="1152" height="832" loading="lazy" style="width:100%;border:1px solid var(--line)"/>
+    </div><figcaption><span><b>FIG. 03</b> 检票口：先验票的成色，再决定放行到哪条股道</span><span>INK &amp; GOUACHE / 2026</span></figcaption></div>
+
+<h3>强度：授权的三种成色</h3>
+    <p>过了门禁的消息还要定「强度」。002 的 Strength 表只有三档，但档位之间藏着整个授权哲学：</p>
+    <ul>
+      <li><strong>explicit 明确</strong>——名单上的人呼叫了 Agent，或在已有工单的 Thread 上跟进。最强成色。</li>
+      <li><strong>inferred 推断</strong>——没在名单上的人跟进已有工单的 Thread；准入表放行的候选；名单内 bot 的消息。能产生候选，<em>永远成不了明确请求</em>。</li>
+      <li><strong>not admitted</strong>——其他一切：陌生 bot 的消息、被准入表忽略的、以及 auto 模式没开时的一切推断型消息。</li>
+    </ul>
+    <p>注意最后那个括号里的细则：「对于未列入名单的人，<em>explicit 格优先</em>——即使在有工单的 Thread 上，并且在每种 accept 模式下都生效。」优先级规则写进了表格语义，而不是靠模型现场判断。</p>
+
+    <h3>Mandate：授权的不可变性，与复活前重验</h3>
+    <p>Eval 接受一条消息，创建的是「不可变的 Mandate」：它记录当时的 Policy 版本、范围、强度、命中的规则、发送者在该 Source 上的身份。三件事只有三件事能动它——「<em>accept 创建它，人的 stop 撤回它，重验失败撤销它</em>」。已结束的工单仍留着 Mandate：只要有人在它的 Thread 上说一句人话，同一个工作就能复活，「无需新的 Eval 或 Decision」。</p>
+    <p>但复活前要过一遍 revalidation——按 Mandate 当初的成色查现况：推断型的要求 auto 模式还在、命中的规则还启用着；准入表放行的要求今天同样的格子还给出同等强度（「把发送者从名单上删掉，可以撤销一张当初凭名单格子接受的 Mandate」）；名单型的要求发送者还在名单上。<em>授权不是永生的，它随它的依据一起过期</em>。</p>
+    <p>而全章最硬的一句，值得原文照抄：</p>
+    <div class="pull">**A person saying "stop" in a Thread is an ordinary Trigger, and Eval decides stop. An Executor cannot declare that a person asked it to stop.**<br/>人在 Thread 里说「停」是一条普通的触发，由 Eval 决定停止。<b>执行器无权宣称「是人叫我停的」。</b></div>
+    <p>为什么这么严？因为「用户让我干的」是执行系统里最万能的免罪牌。一旦 Worker 可以自己宣布这句话，授权链就在它嘴里断掉了。标本的解法是把 stop 的解释权整个收走：人说的每个字都只是 Trigger，都得过 gate、进 Eval，由带完整 Policy 上下文的评估层判定强度与去向。面板上的 stop 按钮才是命令，直接生效、记为 manual stop——<em>权力的通道收窄到只剩明确的那几条</em>。</p>
+    <div class="note"><b>顺带一条工程细节：</b>Eval 也有超时——「超时的 Eval 把它的 Trigger 重新入队，连续两次之后第三次记 unavailable」；面板只在 unavailable 不满 24 小时、仍是该 Thread 最新决定时才打扰人。连「评估失败」都有克制的通知策略。</div>
+    <p>授权关守住了，门开了。下一章跟着一张工单走进执行区：它能拿到什么，又被什么拦住。</p>
+  </div>
+</section>

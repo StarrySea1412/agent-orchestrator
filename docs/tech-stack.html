@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<style>
+@font-face{font-family:"LXGW WenKai";src:url("../assets/fonts/wenkai-regular.woff2") format("woff2");font-weight:300 599}
+@font-face{font-family:"LXGW WenKai";src:url("../assets/fonts/wenkai-medium.woff2") format("woff2");font-weight:600 900}
+*{box-sizing:border-box;margin:0}
+body{width:900px;background:#e3e2d6;font-family:"LXGW WenKai","Microsoft YaHei",sans-serif;color:#23272a;padding:34px 30px}
+.sheet{background:#f0efe8;border:2px solid #23272a;border-radius:6px;padding:34px 36px 26px;box-shadow:8px 8px 0 rgba(90,95,88,.25);position:relative;overflow:hidden}
+.sheet::before{content:"";position:absolute;inset:0;background-image:radial-gradient(circle,rgba(70,80,78,.1) 1.1px,transparent 1.3px);background-size:26px 26px;pointer-events:none}
+.tag{display:inline-block;font-size:12px;letter-spacing:.28em;color:#f6f8f5;background:#35565c;padding:5px 14px;border-radius:3px;font-weight:700;position:relative}
+h1{font-size:44px;letter-spacing:-.01em;margin:14px 0 6px;line-height:1.25;position:relative}
+h1 em{font-style:normal;color:#bf3a1c}
+.sub{font-size:15.5px;color:#4a4f52;line-height:1.8;margin-bottom:20px;position:relative}
+.hero-card{position:relative;background:#faf9f2;border:1.5px solid #b4b2a0;border-left:5px solid #bf3a1c;border-radius:4px;padding:15px 18px;display:flex;gap:16px;align-items:center;box-shadow:3px 3px 0 rgba(90,95,88,.16)}
+.hero-card b{font-size:17px;display:block;margin-bottom:3px}
+.hero-card p{font-size:12.8px;color:#787d7a;line-height:1.7}
+.hero-num{flex:0 0 auto;font-family:Consolas,monospace;font-size:30px;font-weight:700;color:#284449;background:#eaf0ee;border:1px solid rgba(53,86,92,.4);border-radius:4px;padding:8px 14px;text-align:center;line-height:1.15}
+.hero-num small{display:block;font-size:10px;color:#787d7a;font-weight:400;letter-spacing:.1em}
+.flow{display:flex;justify-content:center;gap:0;margin:16px 0 18px;position:relative}
+.flow span{font-family:Consolas,monospace;font-size:12px;color:#284449;background:#faf9f2;border:1.5px dashed rgba(53,86,92,.45);padding:6px 12px;border-radius:3px}
+.flow i{align-self:center;color:#bf3a1c;font-style:normal;padding:0 8px;font-size:14px}
+.grid{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.card{background:#faf9f2;border:1.5px solid #b4b2a0;border-radius:4px;padding:14px 16px;box-shadow:3px 3px 0 rgba(90,95,88,.14)}
+.card h3{font-size:16px;display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.card h3 i{font-style:normal;font-family:Consolas,monospace;font-size:12px;color:#f6f8f5;border-radius:3px;padding:3px 8px;letter-spacing:.08em}
+.card p{font-size:12.6px;color:#4a4f52;line-height:1.78}
+.card p b{color:#181c1e}
+.c1 h3 i{background:#35565c}.c2 h3 i{background:#5d6d74}.c3 h3 i{background:#a8842c}
+.c4 h3 i{background:#bf3a1c}.c5 h3 i{background:#77588a}.c6 h3 i{background:#6f6a50}
+.bars{margin-top:14px;position:relative;background:#faf9f2;border:1.5px solid #23272a;border-radius:4px;padding:12px 18px;display:flex;justify-content:space-between;align-items:center;box-shadow:3px 3px 0 rgba(90,95,88,.2)}
+.bars b{font-size:13.5px}
+.bars small{display:block;font-size:11px;color:#787d7a;margin-top:2px}
+.pill{font-family:Consolas,monospace;font-size:11px;color:#284449;border:1px solid rgba(53,86,92,.45);padding:4px 10px;border-radius:2px;background:#eaf0ee;margin:3px 0 3px 6px;white-space:nowrap}
+.bars>div:last-child{display:flex;flex-wrap:wrap;justify-content:flex-end;max-width:300px}
+.foot{margin-top:14px;text-align:center;font-size:11px;color:#a2a49a;letter-spacing:.12em}
+</style>
+</head>
+<body>
+<div class="sheet">
+  <span class="tag">造物手记 VOL.11 · 2026.11</span>
+  <h1>当 Agent <em>指挥 Agent</em></h1>
+  <p class="sub">DeepSeek Super-agent 架构解剖：一份「尽量少占人的注意力」的调度规程——九个概念、一张准入表、一条 200 行红线、被禁止的 sleep，和被测试管住的设计文档。</p>
+  <div class="hero-card">
+    <div class="hero-num">9+4<small>章 + 小样</small></div>
+    <div>
+      <b>解剖标本：dsh-superagent-prototype（MIT · 2026-10-31 开源）</b>
+      <p>src 92 文件 · 15205 行 · tests 59 spec · docs 000–008 共 1973 行 · 依赖仅 proper-lockfile 与 zod；本文所有引文核对到真实文件与章节，只读解剖未运行其代码。</p>
+    </div>
+  </div>
+  <div class="flow"><span>Trigger 进站</span><i>→</i><span>gate 门禁</span><i>→</i><span>Eval 评估</span><i>→</i><span>Ticket+Mandate</span><i>→</i><span>Assignment 派工</span><i>→</i><span>Channel 回写</span></div>
+  <div class="grid">
+    <div class="card c1"><h3><i>01</i>注意力经济学</h3><p><b>每条消息都是债</b> · observe 先记录「would accept」不实际接 · start narrow · 操作者责任条款（别用它刷量 / Own what it says）</p></div>
+    <div class="card c2"><h3><i>02</i>领域模型</h3><p>Source→Trigger→Thread→Eval→Ticket 九概念 · <b>「人不是领域概念」</b>（标识随 Trigger、权限归 Policy、跨平台映射是提示词）· 12 条被拒绝的概念表</p></div>
+    <div class="card c3"><h3><i>03</i>授权门禁</h3><p><b>admission 表三格</b> × accept 三档（off/observe/auto）· 强度 explicit/inferred/not admitted · Mandate 不可变 + <b>复活前 revalidation</b> · 执行器无权宣称「人叫它停」</p></div>
+    <div class="card c4"><h3><i>04</i>工单执行</h3><p>阶段表 <b>first matching row wins</b> · 一单一会话一目录 · <b>人类保留槽</b>（新工单挤不掉人）· 自动合并红线（&lt;200 行 + 审批覆盖 + 不以 agent 账号合并）</p></div>
+    <div class="card c5"><h3><i>05</i>不等待的艺术</h3><p>16 行 orchestrator 提示词 · <b>noWait 守卫禁 sleep</b>（shell 5s 转后台）· Effects 六类（2s→60s / 5s→300s，Later 不计失败）· <b>Outbox 顺序：确认先于结果</b></p></div>
+    <div class="card c6"><h3><i>06</i>权力结构</h3><p>五层优先级：<b>工具强制事实 &gt; 内置段 &gt; 命中规则 &gt; 团队段 &gt; 外部文本只是数据</b> · 反注入三独立事实 + intent_evidence · Policy 段置于最后 · 覆写记录 base，默认升级并排显示差异</p></div>
+  </div>
+  <div class="bars">
+    <div><b>四枚确定性小样</b><small>准入法庭 / 工单阶段机 / 效果队列 / 权力栈 —— 判定规则核对自原文，固定种子可复现</small></div>
+    <div><span class="pill">单文件 0 依赖</span><span class="pill">只读解剖</span><span class="pill">LXGW 文楷子集</span><span class="pill">GitHub Pages</span></div>
+  </div>
+  <p class="foot">STARRYSEA1412.GITHUB.IO/AGENT-ORCHESTRATOR · TIMETABLE / 2026</p>
+</div>
+</body>
+</html>

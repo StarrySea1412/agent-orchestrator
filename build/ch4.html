@@ -1,0 +1,78 @@
+<section class="chapter" id="ch4">
+  <div class="ch-head">
+    <div class="ch-num"><b>04</b>CHAPTER<br/>00:03</div>
+    <div class="ch-title">
+      <h2>执行：一张工单的一生</h2>
+      <p>阶段表、每工单一个 session 和目录、普通槽之外多一个人类槽，以及一条 200 行的合并红线</p>
+    </div>
+  </div>
+  <div class="ch-body">
+    <p class="lede">工单创建之后，执行区的故事是三样东西：一张「先到先得」的阶段表、一套按工单隔离的执行环境、和一条写死的合并红线。</p>
+    <h3>阶段表：一行一行往下读，第一行命中即停</h3>
+    <p>003 号文档给每个开放工单定义了一个 stage——判定规则只有一句：「从上往下读，第一行命中的胜出」。这张表直接决定面板显示什么、以及人能不能重试：</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>阶段</th><th>条件（节选）</th><th>面板标签</th></tr></thead>
+      <tbody>
+        <tr><td><b>person / delivery</b></td><td>给执行会话投递输入失败；2 秒后重试，翻倍到 1 分钟</td><td>Input undelivered</td></tr>
+        <tr><td><b>person / answer</b></td><td>有一个 Attention（等人的问题）</td><td>Awaiting answer</td></tr>
+        <tr><td><b>person / review</b></td><td>最新 Report 是 ready</td><td>Awaiting review</td></tr>
+        <tr><td><b>person / blocked·failed</b></td><td>最新 Report 是 blocked/failed 且之后没有人的消息到达</td><td>Blocked · Failed</td></tr>
+        <tr><td><b>working / queued</b></td><td>没有 Assignment，或有未启动的</td><td>Queued</td></tr>
+        <tr><td><b>idle</b></td><td>最新 Report 是 waiting，或 Assignment 已结束</td><td>Waiting for a Trigger</td></tr>
+        <tr><td><b>working</b></td><td>其他一切</td><td>Working</td></tr>
+      </tbody>
+    </table></div>
+    <p>表的排序就是注意力政策的落地：四行 <code>person</code> 打头的阶段排在最前——「<em>person 阶段意味着工单无法在没有人类输入的情况下继续</em>」；而健康的 working 状态压在最底，只占面板里最不显眼的位置。这张表在 <code>src/core/stage.ts</code> 里实现，且有专门的 <code>tests/stage.spec.ts</code>「逐行测试」。</p>
+
+    <h3>隔离：一单一会话一目录</h3>
+    <p>每个工单拿到一个名为 <code>worker-&lt;ticket id&gt;</code> 的执行会话和一个以工单短名命名的目录，默认在 <code>&lt;stateDir&gt;/work</code> 下。开工前的 prepare 命令跑一次，十分钟上限，典型用法是 <code>git worktree</code> 检出代码。执行会话以操作者的 OS 用户跑命令、<em>无需逐条审批</em>——但它的 shell 预设把前台命令 5 秒后转入后台作业，让它在下个步骤就能接新消息，而不是等一条长命令跑完（下一章细讲这个 5 秒）。</p>
+    <p>隔离的诚实边界也写在明处：「这些包装器和目录建立的是默认，不是安全边界——<em>worker 仍然可以用绝对路径执行任何程序</em>。」</p>
+        <div class="demo" id="d2">
+      <div class="demo-head"><span class="demo-tag">DEMO 02 · 工单阶段机</span><span class="demo-title">一行一行往下读，第一行命中即停<span class="hint">按按钮，看阶段怎么变</span></span></div>
+      <div class="demo-body">
+        <div class="tk-wrap">
+          <div>
+            <div class="tk-stage">
+              <div class="tk-banner" id="d2-banner"></div>
+              <div class="tk-trace" id="d2-trace"></div>
+            </div>
+            <div class="tk-btnrow" style="margin-top:12px">
+              <button class="run" id="d2-ready">Report: ready</button>
+              <button class="ghost" id="d2-blocked">Report: blocked</button>
+              <button class="ghost" id="d2-progress">Report: progress</button>
+              <button class="ghost" id="d2-waiting">Report: waiting</button>
+              <button class="ghost" id="d2-human">人的消息到达</button>
+              <button class="ghost" id="d2-reset">重置</button>
+            </div>
+          </div>
+          <div class="tk-side">
+            <h5>台账</h5>
+            <div class="tk-log" id="d2-log"></div>
+            <div class="tk-kv" id="d2-kv"></div>
+          </div>
+        </div>
+      </div>
+      <div class="demo-foot">阶段表逐行实现自 <b>docs/003 · Ticket stages</b>（first matching row wins）：<b>waitsForPerson</b> = 最新 Report 为 blocked/failed 且其后无人的消息；人的消息释放 blocked/failed 工单；retry 仅在 person 系阶段可用。</div>
+    </div>
+
+<h3>人类槽：新工单再多，也挤不掉人正在跟的那单</h3>
+    <p>并发控制里藏着全篇最温柔的机制。工单在启动和唤醒时要占一个 worker slot，槽位受并发上限约束。但有一条特殊规则（003 原文）：</p>
+    <div class="pull">并发上限之外，<b>为人的消息或状态请求额外保留一个槽</b>。普通槽占满时，人的唤醒可以动用这个保留槽，并且优先于新工单的启动拿到空闲槽。<b>新工作因此永远无法阻止人继续一个已存在的工单。</b></div>
+    <p>换到车站的语言：列车再多，站台永远给候车的人留一条通道。上限的具体数值在 <code>src/limits.ts</code> 里——<code>maxWorkers: { min: 1, max: 16 }</code>。而排队规则也是分层的：人的消息有保留槽，CI 结果等其他输入老老实实等普通槽，「启动是并发的，一个慢的 prepare 命令只拖慢它自己的工单」。</p>
+
+    <h3>合并红线：Agent 可以修，但不许按最后的按钮</h3>
+    <p>自动合并的规则值得整段照抄（003 Merging，有删节）：</p>
+    <div class="code"><div class="code-bar"><span>docs/003-execution.md · Merging</span><b>自动合并的默认条件</b></div>
+<pre>宿主<b>没有</b>任何合并专用的决策逻辑——自动合并完全由 <span class="s">Delivery requirements</span> 提示词治理。
+默认情况下，执行器<b>从不</b>以 agent 账号启用自动合并：GitHub 会把合并归功于启用它的人。
+交付要求必须指定<b>另一个账号</b>的 CLI 来执行合并；没有的话，由人来合并。
+默认指令只允许对「本工单开的 PR」自动合并，且当：它已就绪、
+所需审批覆盖 head 提交、<span class="n">增删行数合计少于 200 行</span>。
+推送新版之前，执行器先撤回 auto-merge。</pre></div>
+    <p>三条防线层层退守：先是条件收紧（<200 行、审批覆盖、只限自己的 PR），再是身份隔离（合并功劳绝不落在 agent 账号头上——那条 "GitHub attributes the merge to whoever enabled it" 的注脚是整段最清醒的一行），最后是宿主的谦逊声明（「宿主没有任何合并专用的决策逻辑」——治理权交给提示词，而提示词在下一章会被证明改不了门禁）。推送新版前先撤回 auto-merge 这一条，则是把「旧审批覆盖新代码」的经典漏洞也堵上了。</p>
+    <h3>工单怎么结束</h3>
+    <p>结束条件同样克制：ready 报告结束工单；执行器发现无事可做（如无法复现、已被取代）报 <code>dropped</code>，「工单结束且不发消息——除非命中的规则要求一条」；PR 型工单要等「它开的所有 pull request 都不再开放」才算完，「以最后一次相关关闭的结果收场，并保留订阅——一条后来的人评论仍能复活它」。结束不等于失忆。</p>
+    <div class="note"><b>一个值得停一停的设计：</b>结束时只给聊天渠道发一条结果通知，「GitHub 上 PR 本身已经显示结果了」——不多写一个字。注意力经济学的又一次执行。</div>
+    <p>工单跑起来了，但真正让人好奇的是那位从不等待的调度员。下一章：为什么主 Session 连 <code>sleep</code> 都被禁止。</p>
+  </div>
+</section>

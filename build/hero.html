@@ -1,0 +1,67 @@
+<header class="wrap masthead">
+  <div class="brand">
+    <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2" stroke="#35565c" stroke-width="1.4"/><path d="M6.5 9h11M6.5 12.5h11M6.5 16h6" stroke="#35565c" stroke-width="1.2" stroke-linecap="round"/><circle cx="17.2" cy="16" r="1.6" fill="#bf3a1c"/></svg></span>
+    <span>造物手记 <small>VOL.11</small></span>
+  </div>
+  <div class="edition">
+    <span class="pack"><i class="pack-dot" aria-hidden="true"></i>TIMETABLE / 时刻表</span>
+    <span>BOARD 11 · 2026.11</span>
+  </div>
+</header>
+
+<section class="wrap hero">
+  <div>
+    <p class="eyebrow"><span>FIELD NOTES</span>一次造物式的解剖</p>
+    <h1>当 Agent<br/><em>指挥 Agent</em><span class="sub">DeepSeek Super-agent 架构解剖——一个「尽量少占人的注意力」的自主系统：九个概念、一张被拒绝的概念表、一张准入表、一条 200 行红线，和被测试管住的设计文档</span></h1>
+    <div class="dek-wrap">
+      <p class="dek-tag">本片提要</p>
+      <p class="dek">10 月 31 日晚，DeepSeek Harness 团队开源了一份 Super-agent 原型：不是新模型，而是一套「AI 指挥 AI」的车站调度规程——长驻的 Router 只 routing 不干活，Worker 各自在隔离 session 里执行单一工单，没人叫就闭嘴。这篇把 15205 行真实代码和九篇编号设计文档摊开，逐层核对：授权怎么走门禁、工单怎么排班、为什么主 Session 连 sleep 都被禁止，以及一张文档自己承认「尚未实现」的边界清单。</p>
+    </div>
+    <div class="hero-meta">
+      <span class="pill"><b>9</b> 篇编号设计文档</span>
+      <span class="pill"><b>2</b> 个依赖 · 15205 行</span>
+      <span class="pill"><b>59</b> 个测试文件</span>
+      <span class="pill"><b>12</b> 条被拒绝的概念</span>
+    </div>
+  </div>
+  <figure class="art">
+    <div class="screen">
+      <div class="screen-img">
+        <img src="assets/art/hero.webp" alt="单眼折纸鸟站长戴着大檐帽，站在编组站信号台前，一手拿怀表一手举绿色信号旗，身后时刻表板上排满车票格" width="1152" height="832"/>
+      </div>
+      <div class="tc-bar"><span>TIMETABLE 11</span><span class="tc">GATE · TICKET · DISPATCH</span></div>
+    </div>
+    <figcaption><span><b>FIG. 00</b> 站长只负责发车，从不上车干活</span><span>INK &amp; GOUACHE / 2026</span></figcaption>
+  </figure>
+</section>
+
+<section class="stats" aria-label="关键数字">
+  <div class="wrap stats-inner">
+    <div class="stat"><b>5<span>秒</span></b><small>主 Session 的 shell 上限：超时转后台，因为阻塞的步骤会漏接新来的活</small></div>
+    <div class="stat"><b>1<span>个</span></b><small>普通槽位之外保留的人类槽——新工单再多，也不能挤掉人正在跟的工单</small></div>
+    <div class="stat"><b>200<span>行</span></b><small>自动合并的红线：增删超过它，Agent 只能等人按按钮</small></div>
+    <div class="stat"><b>0<span>次</span></b><small>Worker 直接对人说话的次数：它只向 Router 汇报</small></div>
+  </div>
+</section>
+
+<div class="wrap opening">
+  <div class="prose">
+    <div class="jd-card">
+      <p class="jd-tag">READ THE DISCLAIMER · README 第一句（原文）</p>
+      <p class="jd-text">「Research prototype for reference only, <strong>not an official DeepSeek product</strong>. … much of the engineering done by coding agents.」——它自己先承认三件事：这是研究原型；部分文章里的设计是未来方向，原型里并未实现；连代码大部分都是编码 Agent 写的。</p>
+      <p class="jd-note" style="margin-top:10px">这份诚实反而让人愿意认真读它：它不是发布会 PPT，是一份可以逐行核对的调度规程。本篇的所有引文都核对到真实文件——九篇编号文档、11 个提示词文件、92 个源码文件，以及一张连「文档必须只向后链接」都有测试管着的规格清单。</p>
+    </div>
+    <p class="lead">Vol.10 给 Agent 配了一台总机，接的是<strong>模型</strong>：哪条线路活着，电话转给谁。这一篇要接的换成了<strong>Agent 本身</strong>：一个长驻的调度者接下所有来电，自己从不干活，把活写成一张张工单，派给一群互相看不见、也永远听不见彼此的执行者。DeepSeek 给它起名 Super-agent，而它的第一性原理朴素得近乎固执——<em>尽量少占人的注意力，尽量多交付价值</em>。全篇最动人的不是某个聪明算法，而是为这句话付出的所有纪律：一张三格准入表、一条 200 行红线、一个被禁止 sleep 的主 Session，和十二个「想清楚了但决定不要」的概念。</p>
+    <p class="scope">标本 · deepseek-ai/dsh-superagent-prototype（MIT，2026-10-31 开源）<br/>src 92 文件 · 15205 行 · tests 59 个 spec · docs 000–008 九篇 1973 行 · 依赖仅 proper-lockfile 与 zod<br/>所有引文核对到真实文件与章节；本篇只读解剖，未运行标本代码。</p>
+    <div class="toc-head"><span>CONTENTS · 七段解剖</span><span>PHILOSOPHY → DOMAIN → GATE → TICKET → QUEUE → PROMPT → CRAFT</span></div>
+    <nav class="toc">
+      <a href="#ch1"><i>01</i><span>它不是新模型，是一份注意力经济学<small>每一条消息都要还的债：observe 先记录模式与操作者的责任</small></span></a>
+      <a href="#ch2"><i>02</i><span>九个概念与一张拒绝表<small>Source 到 Ticket 的领域模型，和十二个「想清楚了但不要」的概念</small></span></a>
+      <a href="#ch3"><i>03</i><span>授权：谁能让它干活<small>准入表、强度三档、accept 三模式与 Mandate 复活前重验</small></span></a>
+      <a href="#ch4"><i>04</i><span>执行：一张工单的一生<small>阶段表、人类槽、200 行红线与被禁止插手的合并</small></span></a>
+      <a href="#ch5"><i>05</i><span>不等待的艺术<small>十六行主 Session 提示词、被禁止的 sleep、六类效果队列</small></span></a>
+      <a href="#ch6"><i>06</i><span>提示词的权力结构<small>五层优先级：外部文本永远只是数据</small></span></a>
+      <a href="#ch7"><i>07</i><span>工程学的自尊心<small>两个依赖、一个写者原则、被测试管住的设计文档</small></span></a>
+    </nav>
+  </div>
+</div>

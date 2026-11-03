@@ -1,0 +1,44 @@
+<section class="chapter" id="ch1">
+  <div class="ch-head">
+    <div class="ch-num"><b>01</b>CHAPTER<br/>00:00</div>
+    <div class="ch-title">
+      <h2>它不是新模型，是一份注意力经济学</h2>
+      <p>发布会式的解读说这是「24 小时自主 Agent」；设计文档第一页写的是一条会计原则——每一条消息都是要还的债</p>
+    </div>
+  </div>
+  <div class="ch-body">
+    <p class="lede">先把标题党拆掉。这次开源的不是一个更聪明的模型，而是一份<strong>调度规程</strong>：模型还是你熟悉的那些模型，变的是它们之间的指挥关系——谁接电话、谁干活、谁能对人说话。而整份规程的宪法只有一句话，印在 000 号文档的开头：</p>
+    <div class="pull"><b>Take as little human attention as possible, and give as much value as possible.</b><br/>尽量少占用人的注意力，尽量多交付价值。</div>
+    <p>紧跟着的注解像一条会计准则：「每一条消息、每一次通知、每一个提问、每一项设置、面板上的每一个元素、文档里的每一段话，都要付出某人的注意力——它们的收益必须高过成本，否则就删掉。」这不是修辞。后面你会看到这条原则如何变成具体的机制：消息默认一句话、路由备注限三十个词、面板只显示等人的事、文档只准引用比它编号小的文档。每个设计都能往这条宪法上追溯。</p>
+
+    <h3>自主的三条边界</h3>
+    <p>000 号文档给 Agent 立的规矩，逐条核对原文：</p>
+    <ul>
+      <li><strong>只在被派活或命中书面规则时行动。</strong>「请求只有直接呼叫 Agent、且来自团队允许的人时才算数。没人要的活需要团队写下的规则——而且起步阶段只<em>记录</em>它本来会做什么，并不真做。」最后这半句是最妙的产品设计，下一章细看。</li>
+      <li><strong>只在有人必须行动或有人用得上结果时说话。</strong>确认一次、干活期间闭嘴、出结果再开口；消息短、回到原来那条会话里。</li>
+      <li><strong>一次只问一个具体问题</strong>，用结构化表单，让问题真正抵达人——而不是埋在一份长报告里。</li>
+    </ul>
+    <p>还有两条写给了 Agent 的品格：「按影响停，不按辛苦停」——本地改动要做到可审查才算完，需要设计决策的改动就停在一句明确的问题上；以及本系列读者最熟悉的一条——「<em>如实汇报：草稿要标未完成，失败要报成失败，任何限制都不许为了少问一句而绕开</em>」。从 VOL.06 的判分器到 VOL.10 的 mock 兜底，这个谱系一脉相承。</p>
+
+    <h3>observe：让 Agent 先写日记，再放它出门</h3>
+    <p>「没人要的活需要团队写下的规则」——那规则写好之后，怎么敢直接让它自动接活？标本的答案是三档 accept mode（002 号文档的原文表格，此处为节选）：</p>
+    <div class="code"><div class="code-bar"><span>docs/002-authorization.md · Accept mode</span><b>三档放权</b></div>
+<pre>| <span class="k">Mode</span>    | <span class="k">Effect</span> |
+| off     | 任何推断型候选都不成为候选 |
+| observe | 推断型候选进入评估；正面结果记为 ignore 并标注 <span class="s">"would accept"</span>，<span class="n">不实际接受</span> |
+| auto    | 推断型候选通过评估后真的接受 |</pre></div>
+    <p>中间那档就是日记模式：规则启用了、模型也评估了，但正面的评估只落一条「<em>本会接受</em>」的记录，工单不创建。团队看几天日记，确认它「本来会做的事」都是对的，再切到 auto。<strong>放权不是开关，是一段有观察期的试用期</strong>——这个设计把「信任 Agent」从一次赌博变成了一条可回放的曲线。</p>
+
+    <h3>操作者的责任条款</h3>
+    <p>000 号文档的最后一段不写给 Agent，写给人。标题就一个词：Responsibility。Agent 在用你团队的账号发评论、开 PR、私信同事——「它发出的每一条消息都在花你同事的注意力，而你对它负责」。下面是四条给操作者的军规，原文照录：</p>
+    <ul>
+      <li><strong>Start narrow.</strong>从短白名单起步，主动工作先只记录，看着「它本来会做的事」没问题再放宽。</li>
+      <li><strong>Tune for less noise.</strong>Agent 话多，就把提示词改短改严，或者暂停它。<em>不要用「再发一条消息解释噪音」来处理噪音。</em></li>
+      <li><strong>Do not use it to produce volume.</strong>批量 PR、广播消息、凑工时的忙碌，成本高于收益。</li>
+      <li><strong>Own what it says.</strong>读它以你的名义发的东西，错了就在提示词里改。</li>
+    </ul>
+    <p>最后一句收束整篇宪法：「目标是恰当时刻的恰当帮助——<em>其他任何时刻，什么都不要</em>。」（The goal is the right help at the right time, and nothing at any other time.）</p>
+    <div class="note"><b>和 VOL.10 的呼应：</b>总机篇的结论是「降级策略是价值观的表达」；这一篇把它推到组织尺度——<em>自主性是一份注意力预算</em>，超标的部分不是能力问题，是伦理问题。DeepSeek 把预算写成了 mode 和白名单，让价值观有了运行时形态。</div>
+    <p>宪法有了，接下来是把它翻译成概念的骨架。下一章：九个概念，和一张罕见的「被拒绝的概念」表。</p>
+  </div>
+</section>

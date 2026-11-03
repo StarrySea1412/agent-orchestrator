@@ -1,0 +1,27 @@
+<section class="chapter" id="ch7">
+  <div class="ch-head">
+    <div class="ch-num"><b>07</b>CHAPTER<br/>00:06</div>
+    <div class="ch-title">
+      <h2>工程学的自尊心</h2>
+      <p>两个依赖、一个写者原则、被测试管住的设计文档——这份代码里最难学的是克制</p>
+    </div>
+  </div>
+  <div class="ch-body">
+    <p class="lede">先报数字：92 个 TypeScript 文件、15205 行、59 个测试 spec、一个 SQLite 文件——而 <code>package.json</code> 的 dependencies 里只有两项：</p>
+    <div class="code"><div class="code-bar"><span>package.json · dependencies（全部）</span><b>就这两个</b></div>
+<pre><span class="s">"proper-lockfile"</span>,   <span class="c">// 状态目录的进程锁：防止第二个进程打开同一份状态</span>
+<span class="s">"zod"</span>                <span class="c">// 设置结构的校验</span></pre></div>
+    <p>一个带管理面板、两种事件源、一套工单工作流的系统，运行时依赖是「文件锁 + 校验器」。HTTP 用 Node 原生、SQLite 走内置、渲染面板不引 UI 库（「面板自带控件的本地副本，跟随宿主的标记与设计令牌，因为 bundle 不引 <code>@deepseek-ai/dsh-client-ui-primitives</code>」）。在一个 Agent 框架动辄拖出几十个传递依赖的时代，这两行 package.json 是一份宣言：<em>依赖表是第一个可以被注意力和供应链审计的设计决定</em>。</p>
+    <h3>一个写者原则</h3>
+    <p>007 里最值得抄走的是那张「每类状态只有一个写者」的表：Trigger/Thread/Decision/Ticket/Assignment 归 Engine；读位置归各自 Source；设置归 Settings；提示词版本归 Prompts；效果行归 Effects；回执归 Outbox；每条健康项归认领它的那个部件——HealthBoard「拒绝第二次认领」。配上方法命名纪律：「请求用祈使式（stopTicket），事实用过去式（assignmentStarted）」。谁写、谁读、谁负责，从命名就能读出来。</p>
+    <h3>文档被测试管着</h3>
+    <p>59 个测试里有三个让我停下来看了两遍：<code>tests/class-docs.spec.ts</code>——「src 里的每个类都要有一段 JSDoc」；<code>tests/docs.spec.ts</code>——「编号文档只准引用比它早的文档，本地链接必须全部可解析，本文档的模块表和测试表必须穷尽每个模块与每个测试」；<code>tests/model-surface.spec.ts</code>——「模型读到的一切：工具、提示词、技能、输入，都对着工具 schema、执行环境与术语表校验，且每个角色有字数预算」。</p>
+    <div class="pull">设计文档会腐烂，除非它进 CI。<b>「文档只准向后引用」是一条测试断言，不是写作建议。</b></div>
+    <p>这意味着 000–008 那套「按顺序读、每篇只依赖前文」的阅读体验不是文风，是测试保证的接口。读这些文档的体验和读代码一致，因为它们在同一道门禁下。</p>
+    <h3>诚实的边界，明码标价</h3>
+    <p>文档末尾照样有一段「这篇没解决的」清单：007 的 Open questions 承认两件悬而未决的事——「哪些 Trigger 字段可信（Source 给的 actor、Thread 成员），哪些不可信（正文与引用）」「部署隔离：Agent 的 profile 挂在一份钉死的宿主安装上，别处升级宿主不该弄坏它」。持久化一节则直白地说：「<em>目前没有任何东西删除旧记录</em>」——trigger、disposition、decision、已结束工单、outbox 回执、每份设置修订与提示词版本，全部无限增长。没有假装这问题不存在，也没有用一句「后续会优化」搪塞。</p>
+    <h3>回到那句话</h3>
+    <p>现在可以完整读出 000 那句宪法的重量了。「尽量少占人的注意力」在标本里不是口号，是一张互相咬合的规则网：准入表管谁能开口，强度管开口的成色，阶段表管面板显示什么，noWait 管调度员不阻塞，字数上限管每条消息的成本，合并红线管最后那个按钮，而五层权力结构保证这套网不因任何一段话而失效。技术上的新意或许可以被追赶，但<em>把每一条注意力成本都当债来记</em>的克制，才是这份 Super-agent 真正难抄的部分。</p>
+    <p>拆完这台调度台，回头看 Vol.10 那台总机：那篇解决「电话打给谁」，这篇解决「谁有权打电话进来、谁有权说停」。两台机器叠起来，就是一份完整的 Agent 组织学——线路、门禁、工单、回执，各就各位。</p>
+  </div>
+</section>

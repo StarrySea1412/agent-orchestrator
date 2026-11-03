@@ -1,0 +1,25 @@
+<div class="wrap epilogue" id="closing">
+  <h2>结语：自主性是一份注意力预算</h2>
+  <p>拆完 Super-agent，最想带走的不是 Router/Worker 这个模式——它属于调度器的公共知识；真正难复制的是它在每个分叉口的取舍：十四个概念砍到九个、十二个诱人的设计写进拒绝表、十六行提示词配一个 noWait 守卫、每个类一段 JSDoc、文档引用进 CI。这些单条都不难，难的是<em>每一条都真的执行了</em>。</p>
+  <div class="rules">
+    <div class="rule"><b>RULE 01 · 授权先于能力</b><p>先回答「谁说才算数、说到哪为止」，再谈「能不能干好」。准入表、强度三档、Mandate 不可变、复活前重验——这套组合拳让每张工单都带着自己的授权书上岗，权限跟着依据过期，而不是跟着进程永生。</p></div>
+    <div class="rule"><b>RULE 02 · 提示词是意见，工具是法律</b><p>五层优先级的精髓是把「能说的」和「能管的」分开：团队可以覆写每一段人设，但门禁、Mandate、工具校验长在代码里；外部文本永远只是数据。给 Agent 立规矩前，先决定每条规矩落在第几层。</p></div>
+    <div class="rule"><b>RULE 03 · 让等待成为事故</b><p>报告和结果应当自己抵达，调度者无事即收工；sleep 与长阻塞不该靠纪律，要靠 noWait 这样的守卫直接拒绝。一个会阻塞的步骤漏掉的不只是时间，是别人的来电。</p></div>
+  </div>
+  <div class="limits"><b>这篇没解决的：</b>评估质量本身（admission.md 的三事实判例只是提示词层面的防线，其准确率需要像 VOL.06 那样自己建评测集来量）；多机部署与状态共享（单 SQLite + 目录锁，天生单机）；speculative execution 与 Personal Agent 等文章里点名、原型未实现的方向（README 免责声明已明确）；以及安全边界——「这些包装器建立的是默认，不是安全边界」这句原话值得贴在每个生产部署的文档头。</div>
+  <div class="links">
+    <a href="https://github.com/deepseek-ai/dsh-superagent-prototype" target="_blank" rel="noopener">dsh-superagent-prototype（本文解剖标本 · MIT）</a>
+    <a href="https://starrysea1412.github.io/agent-switchboard/" target="_blank" rel="noopener">上期 · VOL.10 给 Agent 配一台总机</a>
+    <a href="https://starrysea1412.github.io/agent-kernel/" target="_blank" rel="noopener">VOL.04 Agent 内核</a>
+    <a href="https://starrysea1412.github.io/agent-skillcraft/" target="_blank" rel="noopener">VOL.07 把能力打包成技能</a>
+    <a href="https://starrysea1412.github.io/agent-eval/" target="_blank" rel="noopener">VOL.06 给 Agent 打分</a>
+  </div>
+</div>
+
+<footer class="wrap site-foot">
+  <div>
+    <div>造物手记 VOL.11 · 当 Agent 指挥 Agent</div>
+    <div style="margin-top:5px">TIMETABLE / 2026.11 / 单文件 · 零依赖 · 确定性小样</div>
+  </div>
+  <div class="foot-note">标本 deepseek-ai/dsh-superagent-prototype（MIT License），引文核对到 docs/000–008、prompts/*.md 与 src/ 真实文件，为可读性有删节与中译；本篇为只读解剖，未运行标本代码。四枚小样为确定性模型：无外部随机、参数可调、行为可复现。字体为 LXGW 文楷（OFL 许可，见 assets/fonts/OFL.txt）。插图由 GPT 系图像模型生成。</div>
+</footer>
