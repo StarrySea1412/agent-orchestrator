@@ -13,7 +13,7 @@
 <meta property="og:description" content="模型挂了之后发生什么：六类错误两种药、重试包在换人里、熔断冷却 60 秒、以及「不许静默降级」背后的价值观。"/>
 <meta property="og:type" content="article"/>
 <meta property="og:image" content="assets/art/hero.webp"/>
-<title>给 Agent 配一台总机 · 造物手记 VOL.10</title>
+<title>给 Agent 配一台总机 · 造物手记 <a href="https://starrysea1412.github.io/agent-switchboard/" target="_blank" rel="noopener" style="text-decoration:underline dotted; text-underline-offset:3px">VOL.10</a></title>
 <style>
 /* 《当 Agent 指挥 Agent》· 造物手记 VOL.11
    车站时刻表：冷灰白纸、铁青、信号红、时刻黄 —— 一张摊开的编组站调度图。 */
@@ -441,7 +441,7 @@ input[type=text]:focus,select:focus{outline:2px solid var(--signal);outline-offs
       <li><strong>只在有人必须行动或有人用得上结果时说话。</strong>确认一次、干活期间闭嘴、出结果再开口；消息短、回到原来那条会话里。</li>
       <li><strong>一次只问一个具体问题</strong>，用结构化表单，让问题真正抵达人——而不是埋在一份长报告里。</li>
     </ul>
-    <p>还有两条写给了 Agent 的品格：「按影响停，不按辛苦停」——本地改动要做到可审查才算完，需要设计决策的改动就停在一句明确的问题上；以及本系列读者最熟悉的一条——「<em>如实汇报：草稿要标未完成，失败要报成失败，任何限制都不许为了少问一句而绕开</em>」。从 VOL.06 的判分器到 VOL.10 的 mock 兜底，这个谱系一脉相承。</p>
+    <p>还有两条写给了 Agent 的品格：「按影响停，不按辛苦停」——本地改动要做到可审查才算完，需要设计决策的改动就停在一句明确的问题上；以及本系列读者最熟悉的一条——「<em>如实汇报：草稿要标未完成，失败要报成失败，任何限制都不许为了少问一句而绕开</em>」。从 <a href="https://starrysea1412.github.io/agent-eval/" target="_blank" rel="noopener" style="text-decoration:underline dotted;text-underline-offset:3px">VOL.06</a> 的判分器到 <a href="https://starrysea1412.github.io/agent-switchboard/" target="_blank" rel="noopener" style="text-decoration:underline dotted;text-underline-offset:3px">VOL.10</a> 的 mock 兜底，这个谱系一脉相承。</p>
 
     <h3>observe：让 Agent 先写日记，再放它出门</h3>
     <p>「没人要的活需要团队写下的规则」——那规则写好之后，怎么敢直接让它自动接活？标本的答案是三档 accept mode（002 号文档的原文表格，此处为节选）：</p>
@@ -461,7 +461,7 @@ input[type=text]:focus,select:focus{outline:2px solid var(--signal);outline-offs
       <li><strong>Own what it says.</strong>读它以你的名义发的东西，错了就在提示词里改。</li>
     </ul>
     <p>最后一句收束整篇宪法：「目标是恰当时刻的恰当帮助——<em>其他任何时刻，什么都不要</em>。」（The goal is the right help at the right time, and nothing at any other time.）</p>
-    <div class="note"><b>和 VOL.10 的呼应：</b>总机篇的结论是「降级策略是价值观的表达」；这一篇把它推到组织尺度——<em>自主性是一份注意力预算</em>，超标的部分不是能力问题，是伦理问题。DeepSeek 把预算写成了 mode 和白名单，让价值观有了运行时形态。</div>
+    <div class="note"><b>和 <a href="https://starrysea1412.github.io/agent-switchboard/" target="_blank" rel="noopener" style="text-decoration:underline dotted;text-underline-offset:3px">VOL.10</a> 的呼应：</b>总机篇的结论是「降级策略是价值观的表达」；这一篇把它推到组织尺度——<em>自主性是一份注意力预算</em>，超标的部分不是能力问题，是伦理问题。DeepSeek 把预算写成了 mode 和白名单，让价值观有了运行时形态。</div>
     <p>宪法有了，接下来是把它翻译成概念的骨架。下一章：九个概念，和一张罕见的「被拒绝的概念」表。</p>
   </div>
 </section>
@@ -511,11 +511,11 @@ input[type=text]:focus,select:focus{outline:2px solid var(--signal);outline-offs
         <tr><td>从报告的自由文本里推断「在等人」</td><td>分类需要结构化事实；执行器通过结构化字段提问</td></tr>
       </tbody>
     </table></div>
-    <p>第六条值得多看一眼：「从自由文本推断状态」是几乎所有 Agent 系统的真实做法——模型说一句「等待用户反馈」，系统就信了。标本拒绝它，理由是<em>分类需要结构化事实</em>：Executor 报告里有一个专门的字段提问（Attention），面板和阶段机都只认这个字段。这与 VOL.05 的「证据先于结论」、VOL.06 的「判分器也要被评测」是同一条原则的又一次落地：<strong>别让最会说话的组件兼职当状态机</strong>。</p>
+    <p>第六条值得多看一眼：「从自由文本推断状态」是几乎所有 Agent 系统的真实做法——模型说一句「等待用户反馈」，系统就信了。标本拒绝它，理由是<em>分类需要结构化事实</em>：Executor 报告里有一个专门的字段提问（Attention），面板和阶段机都只认这个字段。这与 <a href="https://starrysea1412.github.io/seeflow-story/" target="_blank" rel="noopener" style="text-decoration:underline dotted;text-underline-offset:3px">VOL.05</a> 的「证据先于结论」、<a href="https://starrysea1412.github.io/agent-eval/" target="_blank" rel="noopener" style="text-decoration:underline dotted;text-underline-offset:3px">VOL.06</a> 的「判分器也要被评测」是同一条原则的又一次落地：<strong>别让最会说话的组件兼职当状态机</strong>。</p>
 
     <h3>双语术语表：给概念上户口</h3>
     <p>001 文档最后附了一张 Glossary，每个术语配中文名：Source 来源、Trigger 触发、Thread 线程、Eval 评估、Mandate 授权、Ticket 工单、Assignment 派工、Attention 待人工决定……并注明面板一次只显示一种语言，「发给人的消息用平实语言，不用这些术语」。一个工程系统给领域概念上双语户口，还规定<em>术语不许出现在对人说的话里</em>——这是把 000 的注意力原则用到了词汇层面。</p>
-    <div class="note"><b>系列对照：</b>VOL.04《Agent 内核》写过拓扑与类型化委托；那一篇讲的是「调用关系怎么画」，这一篇讲的是「授权关系怎么立」——Ticket 背后永远跟着一条 Mandate，干活的是谁不重要，<em>为什么可以干、能干到哪</em>才是头等公民。</div>
+    <div class="note"><b>系列对照：</b><a href="https://starrysea1412.github.io/agent-kernel/" target="_blank" rel="noopener" style="text-decoration:underline dotted;text-underline-offset:3px">VOL.04《Agent 内核》</a>写过拓扑与类型化委托；那一篇讲的是「调用关系怎么画」，这一篇讲的是「授权关系怎么立」——Ticket 背后永远跟着一条 Mandate，干活的是谁不重要，<em>为什么可以干、能干到哪</em>才是头等公民。</div>
     <p>骨架立住了。下一章把最重要的一段流程单独放大：一个 Trigger 怎么通过门禁，谁有资格按下发车铃。</p>
   </div>
 </section>
@@ -693,7 +693,7 @@ arrive by themselves as messages: never wait for them with sleep, polling or
 job waits; end the turn when nothing is left to do.</span></pre></div>
     <p>十六行里没有一句客套。三组加粗级的禁令分别是：身份（只以部署的 GitHub 账号行动；绝不亲手合并）、分工（<em>Worker 负责调查和实现，你永远不要写实现计划</em>）、以及等待禁令——报告、通知、候选和后台作业的完成都会<em>自己</em>以消息形式到达，绝不许用 sleep、轮询或作业等待去等它们，「无事可做就结束回合」。</p>
     <h3>不等待是代码级的，不是提示词级的</h3>
-    <p>如果禁令只活在提示词里，那它只是祈祷。所以宿主配了一个 <code>noWait</code> 守卫（007 原文）：「拒绝主 Session 在命令位调用 <code>sleep</code>、shell 超时超过 30 秒、以及作业等待超过 5 秒的调用」——理由一句话：「<em>阻塞的步骤会延误新候选的到来</em>」。一个想偷懒挂起等结果的调度者，连工具这一关都过不去。这是 VOL.10 那条「工具强制的事实高于一切提示词」的权力结构在时间维度的应用：<em>禁令长在工具里，不是长在嘴上</em>。</p>
+    <p>如果禁令只活在提示词里，那它只是祈祷。所以宿主配了一个 <code>noWait</code> 守卫（007 原文）：「拒绝主 Session 在命令位调用 <code>sleep</code>、shell 超时超过 30 秒、以及作业等待超过 5 秒的调用」——理由一句话：「<em>阻塞的步骤会延误新候选的到来</em>」。一个想偷懒挂起等结果的调度者，连工具这一关都过不去。这是 <a href="https://starrysea1412.github.io/agent-switchboard/" target="_blank" rel="noopener" style="text-decoration:underline dotted;text-underline-offset:3px">VOL.10</a> 那条「工具强制的事实高于一切提示词」的权力结构在时间维度的应用：<em>禁令长在工具里，不是长在嘴上</em>。</p>
     <h3>Effects：先把话记在台账上，再去做</h3>
     <p>决策之后的一切外部动作都走同一条路：「stored first, done afterwards」——先在事务里入队，提交后才执行。效果队列共六类，每类有自己的并发度和退避策略（007 的表，节选）：</p>
     <div class="tablewrap"><table>
@@ -798,7 +798,7 @@ job waits; end the turn when nothing is left to do.</span></pre></div>
 
 <h3>覆写有历史，默认有户口</h3>
     <p>团队覆写某段内置提示词时，保存的条目记录「它基于哪段默认文本」；将来标本升级改了默认，「面板把该段标记为 Default updated，把新旧差异并排显示」——团队可以保留自己的、采用新默认、或在此基础上改。「与默认相同的覆写会被删除，让该段跟随未来的默认」。这套机制像 git 的三方合并搬进了提示词管理：升级与定制不再互斥。</p>
-    <div class="note"><b>与 VOL.07 的呼应：</b>技能篇写过「description 是能力与触发的契约」；这一篇把契约往权力深处理了一层——<em>提示词是意见，工具是法律</em>。任何想给 Agent 立规矩的团队，都该先把这五层背下来，再决定每条规矩写在哪层。</div>
+    <div class="note"><b>与 <a href="https://starrysea1412.github.io/agent-skillcraft/" target="_blank" rel="noopener" style="text-decoration:underline dotted;text-underline-offset:3px">VOL.07</a> 的呼应：</b>技能篇写过「description 是能力与触发的契约」；这一篇把契约往权力深处理了一层——<em>提示词是意见，工具是法律</em>。任何想给 Agent 立规矩的团队，都该先把这五层背下来，再决定每条规矩写在哪层。</div>
     <p>机械、授权、等待、权力都拆完了。最后一章回到工程本身：这份 15205 行的代码里，藏着一个老派手艺人的自尊心。</p>
   </div>
 </section>
@@ -839,7 +839,7 @@ job waits; end the turn when nothing is left to do.</span></pre></div>
     <div class="rule"><b>RULE 02 · 提示词是意见，工具是法律</b><p>五层优先级的精髓是把「能说的」和「能管的」分开：团队可以覆写每一段人设，但门禁、Mandate、工具校验长在代码里；外部文本永远只是数据。给 Agent 立规矩前，先决定每条规矩落在第几层。</p></div>
     <div class="rule"><b>RULE 03 · 让等待成为事故</b><p>报告和结果应当自己抵达，调度者无事即收工；sleep 与长阻塞不该靠纪律，要靠 noWait 这样的守卫直接拒绝。一个会阻塞的步骤漏掉的不只是时间，是别人的来电。</p></div>
   </div>
-  <div class="limits"><b>这篇没解决的：</b>评估质量本身（admission.md 的三事实判例只是提示词层面的防线，其准确率需要像 VOL.06 那样自己建评测集来量）；多机部署与状态共享（单 SQLite + 目录锁，天生单机）；speculative execution 与 Personal Agent 等文章里点名、原型未实现的方向（README 免责声明已明确）；以及安全边界——「这些包装器建立的是默认，不是安全边界」这句原话值得贴在每个生产部署的文档头。</div>
+  <div class="limits"><b>这篇没解决的：</b>评估质量本身（admission.md 的三事实判例只是提示词层面的防线，其准确率需要像 <a href="https://starrysea1412.github.io/agent-eval/" target="_blank" rel="noopener" style="text-decoration:underline dotted;text-underline-offset:3px">VOL.06</a> 那样自己建评测集来量）；多机部署与状态共享（单 SQLite + 目录锁，天生单机）；speculative execution 与 Personal Agent 等文章里点名、原型未实现的方向（README 免责声明已明确）；以及安全边界——「这些包装器建立的是默认，不是安全边界」这句原话值得贴在每个生产部署的文档头。</div>
   <div class="links">
     <a href="https://github.com/deepseek-ai/dsh-superagent-prototype" target="_blank" rel="noopener">dsh-superagent-prototype（本文解剖标本 · MIT）</a>
     <a href="https://starrysea1412.github.io/agent-switchboard/" target="_blank" rel="noopener">上期 · VOL.10 给 Agent 配一台总机</a>
@@ -1148,5 +1148,5 @@ job waits; end the turn when nothing is left to do.</span></pre></div>
 })();
 
 </script>
-</body>
+<div class="series-nav" style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;align-items:baseline;font-family:var(--mono,Consolas,monospace);font-size:11px;letter-spacing:1px;color:var(--muted,#8a959c);margin:26px 0 0;padding:16px 0 0;border-top:1px solid var(--line,#d8d8cc)"><a href="https://starrysea1412.github.io/agent-switchboard/" style="color:inherit">← VOL.10 给 Agent 配一台总机</a><a href="https://starrysea1412.github.io/makers-notebook/" style="color:var(--orange,var(--steel,#3e5c6e));font-weight:700">☰ 全系列目录</a><a href="https://starrysea1412.github.io/agent-patrol/" style="color:inherit">VOL.12 住进机房的 Agent →</a></div></body>
 </html>
